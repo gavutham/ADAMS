@@ -1,6 +1,7 @@
 import 'package:adams/models/student.dart';
 import 'package:adams/screens/wrapper.dart';
 import 'package:adams/services/auth.dart';
+import 'package:adams/services/database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,13 +18,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<StudentUser?>.value(
-      initialData: null,
-      value: AuthService().user,
-      child: const MaterialApp(
-        home: Wrapper(),
-        debugShowCheckedModeBanner: false,
-      ),
+    return StreamBuilder<StudentUser?>(
+      stream: AuthService().user,
+      builder: (context, snapshot) {
+        final user = snapshot.hasData ? snapshot.data : null;
+        return StreamBuilder<StudentData?>(
+          initialData: null,
+          stream: DatabaseService(sid: user?.sid).studentData,
+          builder: (context, snapshot) {
+            return MultiProvider(
+              providers: [
+                StreamProvider<StudentUser?>.value(
+                  value: AuthService().user,
+                  initialData: null,
+                ),
+                StreamProvider<StudentData?>.value(
+                  initialData: null,
+                  value: DatabaseService(sid: user?.sid).studentData,
+                )
+              ],
+              child: const MaterialApp(
+                home: Wrapper(),
+                debugShowCheckedModeBanner: false,
+              ),
+            );
+          }
+        );
+      },
     );
   }
 }

@@ -2,7 +2,7 @@ import "package:adams/models/student.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 class DatabaseService {
-  String sid;
+  String? sid;
   
   final CollectionReference studentDataCollection = FirebaseFirestore.instance.collection("students");
 
@@ -30,7 +30,7 @@ class DatabaseService {
       return await stuRef.set(studentData);
   }
 
-  Stream<StudentData> get studentData {
+  Stream<StudentData?> get studentData {
     return studentDataCollection.doc(sid).snapshots().map((snap) => _studentDataFromFirebase(snap.data()! as Map));
   }
 
