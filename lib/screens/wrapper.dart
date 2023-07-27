@@ -1,6 +1,6 @@
 import "package:adams/models/student.dart";
 import "package:adams/screens/authentication/authWrapper.dart";
-import "package:adams/screens/home.dart";
+import "package:adams/screens/home/home.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
