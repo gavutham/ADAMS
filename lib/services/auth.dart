@@ -28,12 +28,19 @@ class AuthService {
 
 
   //register in email/password
-  Future studentSignUp(String email, String password, String department, String year, String name) async {
+  Future studentSignUp(String email, String password, String department, String year, String name, String section) async {
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       await DatabaseService(sid: user!.uid).setStudentDetails(
-        StudentData(department: department, email: email, name: name, sid: user.uid, year: year)
+        StudentData(
+            department: department,
+            email: email,
+            name: name,
+            section: section,
+            sid: user.uid,
+            year: year
+        )
       );
       return _studentUserFromFirebase(user);
     }catch(e){

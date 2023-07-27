@@ -12,6 +12,7 @@ class DatabaseService {
     return StudentData(
       department: data["department"] ?? "",
       email: data["email"] ?? "",
+      section: data["section"] ?? "",
       sid: data["sid"] ?? "",
       year: data["year"] ?? "",
       name: data["name"] ?? "",
@@ -24,6 +25,7 @@ class DatabaseService {
         "department": student.department,
         "email": student.email,
         "name": student.name,
+        "section": student.section,
         "sid": student.sid,
         "year": student.year,
       };

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 //Dropdown values
 const List<String> years = ["I", "II", "III", "IV"];
 const List<String> departments = ["CSE", "IT", "ECE", "EEE", "MECHANICAL", "CIVIL", "BIOMEDICAL", "CHEMICAL"];
+const List<String> sections = ["A", "B", "C"];
 
 class SignUp extends StatefulWidget {
   final void Function() toggleView;
@@ -24,8 +25,9 @@ class _SignUpState extends State<SignUp> {
   String name = "";
   String email = "";
   String password = "";
-  String year = years.first;
-  String department = departments.first;
+  String? year;
+  String? department;
+  String? section;
   String error = "";
   bool loading = false;
 
@@ -42,122 +44,133 @@ class _SignUpState extends State<SignUp> {
           )
         ],
       ),
-      body: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 75),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(hintText: "Name"),
-                onChanged: (value) {
-                  setState(() {
-                    name = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 20,),
-              TextFormField(
-                decoration: const InputDecoration(hintText: "Email"),
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 20,),
-              TextFormField(
-                decoration: const InputDecoration(hintText: "Password"),
-                onChanged: (value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                children: [
-                  const Text("Year"),
-                  const SizedBox(width: 20,),
-                  DropdownButton<String>(
-                    value: year,
-                    hint: const Text("Year"),
-                    icon: const Icon(Icons.arrow_drop_down_rounded),
-                    elevation: 16,
-                    underline: Container(
-                      height: 2,
-                      color: Colors.grey,
-                    ),
-                    onChanged: (String? value) {
-                      // This is called when the user selects an item.
-                      setState(() {
-                        year = value!;
-                      });
-                    },
-                    items: years.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                children: [
-                  const Text("Department"),
-                  const SizedBox(width: 20,),
-                  DropdownButton<String>(
-                    value: department,
-                    hint: const Text("Department"),
-                    icon: const Icon(Icons.arrow_drop_down_rounded),
-                    elevation: 16,
-                    underline: Container(
-                      height: 2,
-                      color: Colors.grey,
-                    ),
-                    onChanged: (String? value) {
-                      // This is called when the user selects an item.
-                      setState(() {
-                        department = value!;
-                      });
-                    },
-                    items: departments.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    loading = true;
-                    error = "";
-                  });
-                  dynamic user = await _auth.studentSignUp(email, password, department, year, name);
-                  if (user == null) {
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 75),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(hintText: "Name"),
+                  onChanged: (value) {
                     setState(() {
-                      loading = false;
-                      error = "Something Went Wrong, please try again";
+                      name = value;
                     });
-                  }
-                },
-                child: const Text("Sign Up"),
-              ),
-              const SizedBox(height: 20,),
-              Text(
-                  error,
-                  style: const TextStyle(
-                      color: Colors.red
-                  )
-              ),
-            ],
+                  },
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  decoration: const InputDecoration(hintText: "Email"),
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20,),
+                TextFormField(
+                  decoration: const InputDecoration(hintText: "Password"),
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20,),
+                DropdownButton<String>(
+                  value: year,
+                  hint: const Text("Year"),
+                  icon: const Icon(Icons.arrow_drop_down_rounded),
+                  elevation: 16,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.grey,
+                  ),
+                  onChanged: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      year = value!;
+                    });
+                  },
+                  items: years.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 20,),
+                DropdownButton<String>(
+                  value: department,
+                  hint: const Text("Department"),
+                  icon: const Icon(Icons.arrow_drop_down_rounded),
+                  elevation: 16,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.grey,
+                  ),
+                  onChanged: (String? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      department = value!;
+                    });
+                  },
+                  items: departments.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 20,),
+                DropdownButton<String>(
+                  value: section,
+                  hint: const Text("Section"),
+                  icon: const Icon(Icons.arrow_drop_down_rounded),
+                  elevation: 16,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.grey,
+                  ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      section = value!;
+                    });
+                  },
+                  items: sections.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 20,),
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      loading = true;
+                      error = "";
+                    });
+                    dynamic user = await _auth.studentSignUp(email, password, department!, year!, name, section!);
+                    if (user == null) {
+                      setState(() {
+                        loading = false;
+                        error = "Something Went Wrong, please try again";
+                      });
+                    }
+                  },
+                  child: const Text("Sign Up"),
+                ),
+                const SizedBox(height: 20,),
+                Text(
+                    error,
+                    style: const TextStyle(
+                        color: Colors.red
+                    )
+                ),
+              ],
+            ),
           ),
         ),
       ),
