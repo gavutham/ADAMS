@@ -5,6 +5,7 @@ class DatabaseService {
   String? sid;
   
   final CollectionReference studentDataCollection = FirebaseFirestore.instance.collection("students");
+  final CollectionReference attendanceCollection = FirebaseFirestore.instance.collection("attendance");
 
   DatabaseService({required this.sid});
 
@@ -30,6 +31,22 @@ class DatabaseService {
         "year": student.year,
       };
       return await stuRef.set(studentData);
+  }
+
+  Future<bool> markAttendance(StudentData student,String date, String time) async {
+    try{
+      final attendanceRef = attendanceCollection
+          .doc(student.department)
+          .collection(student.section)
+          .doc(student.sid)
+          .collection(date)
+          .doc(time);
+      await attendanceRef.update({"present": true});
+      return true;
+    }catch (err){
+      print(err);
+      return false;
+    }
   }
 
   Stream<StudentData?> get studentData {
