@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final student = Provider.of<StudentData?>(context);
 
-    DatabaseReference portalStateRef = FirebaseDatabase.instance.ref("${student?.department}/${student?.section}");
+    DatabaseReference portalStateRef = FirebaseDatabase.instance.ref("${student?.year}/${student?.department}/${student?.section}");
     final db = DatabaseService(sid: student?.sid);
 
     if (student != null) {
