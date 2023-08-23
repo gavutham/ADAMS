@@ -2,6 +2,7 @@ import "package:adams/models/student.dart";
 import "package:adams/services/auth.dart";
 import "package:adams/services/database.dart";
 import "package:adams/shared/loading.dart";
+import "package:adams/utils/datetime.dart";
 import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
@@ -44,8 +45,14 @@ class Home extends StatelessWidget {
                   final portalOpen = snapshot.data != null ? snapshot.data!.snapshot.value as bool: false;
                   return ElevatedButton(
                     onPressed: portalOpen ? () async {
-                      dynamic result = await db.markAttendance(student, "28-07-23", "14:00 - 15:00");
-                      print(result);
+                      String date = getFormattedDate();
+                      String interval = getCurrentInterval();
+                      if (interval != "") {
+                        dynamic result = await db.markAttendance(student, date, interval);
+                        print(result);
+                      }else {
+                        print("Not in the time interval");
+                      }
                     } : null,
                     child: const Text("Mark attendance"),
                   );
