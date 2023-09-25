@@ -38,3 +38,9 @@ String getFormattedDate() {
   final now = DateTime.now();
   return "${now.day}-${now.month}-${now.year}";
 }
+
+String getFormattedDay() {
+  final now = DateTime.now();
+  final day = DateFormat("EEEE").format(now);
+  return day;
+}

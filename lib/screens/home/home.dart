@@ -39,6 +39,19 @@ class Home extends StatelessWidget {
                 fontSize: 30,
                 fontWeight: FontWeight.w900,
               ),),
+              FutureBuilder(
+                future: db.getCurrentHourDetails("${student.year}/${student.department}/${student.section}"),
+                initialData: "",
+                builder: (context, snapshot) {
+                  return Text(
+                    snapshot.hasData ? "Current Hour: ${snapshot.data["name"]}": "",
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  );
+                },
+              ),
               StreamBuilder(
                 stream: portalStateRef.onValue,
                 builder: (context, snapshot) {
@@ -48,9 +61,9 @@ class Home extends StatelessWidget {
                       String date = getFormattedDate();
                       String interval = getCurrentInterval();
                       if (interval != "") {
-                        dynamic result = await db.markAttendance(student, date, interval);
-                        print(result);
-                      }else {
+                        // dynamic result = await db.markAttendance(student, date, interval);
+                        // print(result);
+                      } else {
                         print("Not in the time interval");
                       }
                     } : null,

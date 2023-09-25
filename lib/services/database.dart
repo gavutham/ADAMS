@@ -1,4 +1,5 @@
 import "package:adams/models/student.dart";
+import "package:adams/utils/database.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 class DatabaseService {
@@ -6,6 +7,7 @@ class DatabaseService {
   
   final CollectionReference studentDataCollection = FirebaseFirestore.instance.collection("students");
   final CollectionReference attendanceCollection = FirebaseFirestore.instance.collection("attendance");
+  final CollectionReference timetableCollection = FirebaseFirestore.instance.collection("timetable");
 
   DatabaseService({required this.sid});
 
@@ -46,6 +48,18 @@ class DatabaseService {
     }catch (err){
       print(err);
       return false;
+    }
+  }
+
+  Future getCurrentHourDetails(String classDetails) async {
+    try {
+      final docRef = timetableCollection
+          .doc(getCurrentHour(classDetails));
+      final snapshot = await docRef.get();
+      return snapshot.data();
+    }catch (err) {
+      print(err);
+      return null;
     }
   }
 
