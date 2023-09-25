@@ -43,7 +43,7 @@ class DatabaseService {
           .doc(student.sid)
           .collection(date)
           .doc(time);
-      await attendanceRef.update({"present": true});
+      await attendanceRef.set({"present": true});
       return true;
     }catch (err){
       print(err);

@@ -61,8 +61,8 @@ class Home extends StatelessWidget {
                       String date = getFormattedDate();
                       String interval = getCurrentInterval();
                       if (interval != "") {
-                        // dynamic result = await db.markAttendance(student, date, interval);
-                        // print(result);
+                        dynamic result = await db.markAttendance(student, date, interval);
+                        print(result);
                       } else {
                         print("Not in the time interval");
                       }
