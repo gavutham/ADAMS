@@ -2,8 +2,10 @@ import 'package:adams/utils/datetime.dart';
 
 String getCurrentHour(String classDetails) {
   String currentHour = "/$classDetails/";
-  currentHour += "${getFormattedDay()}/${getCurrentInterval()}";
-  // currentHour += "${getFormattedDay()}/14:50:15:40";
+  String timeInterval = getCurrentInterval();
 
+  if (timeInterval == "") return "";
+
+  currentHour += "${getFormattedDay()}/$timeInterval";
   return currentHour;
 }

@@ -44,7 +44,7 @@ class Home extends StatelessWidget {
                 initialData: "",
                 builder: (context, snapshot) {
                   return Text(
-                    snapshot.hasData ? "Current Hour: ${snapshot.data["name"]}": "",
+                    snapshot.hasData && snapshot.data.runtimeType is Map<String, dynamic> ? "Current Hour: ${snapshot.data["name"]}": "Current Hour: Nil",
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,

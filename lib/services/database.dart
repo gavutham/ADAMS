@@ -53,8 +53,11 @@ class DatabaseService {
 
   Future getCurrentHourDetails(String classDetails) async {
     try {
+      String currentHourRef = getCurrentHour(classDetails);
+      if(currentHourRef == "") return null;
+
       final docRef = timetableCollection
-          .doc(getCurrentHour(classDetails));
+          .doc(currentHourRef);
       final snapshot = await docRef.get();
       return snapshot.data();
     }catch (err) {
