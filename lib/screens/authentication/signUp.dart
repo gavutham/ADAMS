@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 //Dropdown values
 const List<String> years = ["I", "II", "III", "IV"];
-const List<String> departments = ["CSE", "IT", "ECE", "EEE", "MECHANICAL", "CIVIL", "BIOMEDICAL", "CHEMICAL"];
+const List<String> departments = ["CSE", "IT", "ECE", "EEE", "MECH", "CIVIL", "BME", "CHEM"];
 const List<String> sections = ["A", "B", "C"];
 
 class SignUp extends StatefulWidget {
