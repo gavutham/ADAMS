@@ -36,11 +36,11 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return loading ? const Loading() : Scaffold(
       appBar: AppBar(
-        title: const Text("Sign In"),
+        title: const Text("Sign Up"),
         actions: [
           ElevatedButton(
             onPressed: widget.toggleView,
-            child: const Text("Sign Up"),
+            child: const Text("Sign In"),
           )
         ],
       ),
