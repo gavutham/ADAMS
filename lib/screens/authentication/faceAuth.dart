@@ -19,7 +19,7 @@ class FaceAuth extends StatefulWidget{
 class _FaceAuth extends State<FaceAuth>{
   final _auth = AuthService();
 
-  late dynamic user;
+  late dynamic? user;
 
   @override
   void initState() {

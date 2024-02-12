@@ -3,7 +3,10 @@ import "package:adams/services/auth.dart";
 import "package:adams/services/database.dart";
 import "package:adams/shared/loading.dart";
 import "package:adams/utils/datetime.dart";
+import 'package:adams/common/utils/screen_size_util.dart';
+import 'package:adams/common/utils/custom_snackbar.dart';
 import "package:firebase_database/firebase_database.dart";
+import "package:adams/authenticate_face/authenticate_face_view.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -14,6 +17,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initializeUtilContexts(context);
     final student = Provider.of<StudentData?>(context);
 
     DatabaseReference portalStateRef = FirebaseDatabase.instance.ref("${student?.year}/${student?.department}/${student?.section}");
@@ -57,12 +61,17 @@ class Home extends StatelessWidget {
                 builder: (context, snapshot) {
                   final portalOpen = snapshot.data != null ? snapshot.data!.snapshot.value as bool: false;
                   return ElevatedButton(
-                    onPressed: portalOpen ? () async {
+                    onPressed: !portalOpen ? () async {
                       String date = getFormattedDate();
                       String interval = getCurrentInterval();
                       if (interval != "") {
-                        dynamic result = await db.markAttendance(student, date, interval);
-                        print(result);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const AuthenticateFaceView(),
+                          ),
+                        );
+                        // dynamic result = await db.markAttendance(student, date, interval);
+                        // print(result);
                       } else {
                         print("Not in the time interval");
                       }
@@ -79,5 +88,9 @@ class Home extends StatelessWidget {
       return const Loading();
     }
 
+  }
+  void initializeUtilContexts(BuildContext context) {
+    ScreenSizeUtil.context = context;
+    CustomSnackBar.context = context;
   }
 }

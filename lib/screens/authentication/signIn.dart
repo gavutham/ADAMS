@@ -66,6 +66,9 @@ class _SignInState extends State<SignIn> {
                     error = "";
                   });
                   dynamic user = await _auth.studentSignIn(email, password);
+                  setState(() {
+                    loading = false;
+                  });
                   if (user == null) {
                     setState(() {
                       loading = false;
