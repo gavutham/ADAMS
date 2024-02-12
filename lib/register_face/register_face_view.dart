@@ -1,17 +1,20 @@
 import 'dart:convert';
 
-import 'package:face_auth/common/utils/extract_face_feature.dart';
-import 'package:face_auth/common/views/camera_view.dart';
-import 'package:face_auth/common/views/custom_button.dart';
-import 'package:face_auth/common/utils/extensions/size_extension.dart';
-import 'package:face_auth/constants/theme.dart';
-import 'package:face_auth/model/user_model.dart';
-import 'package:face_auth/register_face/enter_details_view.dart';
+import 'package:adams/common/utils/extract_face_feature.dart';
+import 'package:adams/common/views/camera_view.dart';
+import 'package:adams/common/views/custom_button.dart';
+import 'package:adams/common/utils/extensions/size_extension.dart';
+import 'package:adams/constants/theme.dart';
+import 'package:adams/model/user_model.dart';
+import 'package:adams/register_face/enter_details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import "package:firebase_auth/firebase_auth.dart";
 
 class RegisterFaceView extends StatefulWidget {
-  const RegisterFaceView({Key? key}) : super(key: key);
+  final dynamic user;
+  const RegisterFaceView({Key? key,
+  required this.user}) : super(key: key);
 
   @override
   State<RegisterFaceView> createState() => _RegisterFaceViewState();
@@ -87,8 +90,7 @@ class _RegisterFaceViewState extends State<RegisterFaceView> {
                           ),
                         ),
                       );
-                      _faceFeatures =
-                          await extractFaceFeatures(inputImage, _faceDetector);
+                      _faceFeatures = await extractFaceFeatures(inputImage, _faceDetector);
                       setState(() {});
                       if (mounted) Navigator.of(context).pop();
                     },
@@ -101,6 +103,7 @@ class _RegisterFaceViewState extends State<RegisterFaceView> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => EnterDetailsView(
+                              user:  widget.user,
                               image: _image!,
                               faceFeatures: _faceFeatures!,
                             ),

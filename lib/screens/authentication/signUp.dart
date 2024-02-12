@@ -1,7 +1,9 @@
 import 'package:adams/services/auth.dart';
 import 'package:adams/shared/loading.dart';
+import 'package:adams/screens/authentication/faceAuth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:adams/common/utils/custom_snackbar.dart';
+import 'package:adams/common/utils/screen_size_util.dart';
 //Dropdown values
 const List<String> years = ["I", "II", "III", "IV"];
 const List<String> departments = ["CSE", "IT", "ECE", "EEE", "MECH", "CIVIL", "BME", "CHEM"];
@@ -34,6 +36,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    initializeUtilContexts(context);
     return loading ? const Loading() : Scaffold(
       appBar: AppBar(
         title: const Text("Sign Up"),
@@ -147,21 +150,38 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 20,),
                 ElevatedButton(
-                  onPressed: () async {
-                    setState(() {
-                      loading = true;
-                      error = "";
-                    });
-                    dynamic user = await _auth.studentSignUp(email, password, department!, year!, name, section!);
-                    if (user == null) {
-                      setState(() {
-                        loading = false;
-                        error = "Something Went Wrong, please try again";
-                      });
-                    }
+                  onPressed: () {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FaceAuth(email: email,
+                        password: password,
+                        department: department!,
+                        year: year!,
+                        name: name,
+                        section: section!
+                    )), // Replace AuthFacePage with the name of your authentication face page widget
+                  );
+
                   },
-                  child: const Text("Sign Up"),
+                  child: const Text("Register Face"),
                 ),
+                // const SizedBox(height: 20,),
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     setState(() {
+                //       loading = true;
+                //       error = "";
+                //     });
+                //     dynamic user = await _auth.studentSignUp(email, password, department!, year!, name, section!);
+                //     if (user == null) {
+                //       setState(() {
+                //         loading = false;
+                //         error = "Something Went Wrong, please try again";
+                //       });
+                //     }
+                //   },
+                //   child: const Text("Sign Up"),
+                // ),
                 const SizedBox(height: 20,),
                 Text(
                     error,
@@ -175,5 +195,10 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+
+  void initializeUtilContexts(BuildContext context) {
+    ScreenSizeUtil.context = context;
+    CustomSnackBar.context = context;
   }
 }

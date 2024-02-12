@@ -43,6 +43,12 @@ dependencies:
   firebase_database: ^10.2.4
   intl: ^0.18.1
 
+  flutter_face_api: ^4.1.1
+  image_picker: ^0.8.6
+  uuid: ^3.0.7
+  google_mlkit_face_detection: ^0.5.0
+  audioplayers: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

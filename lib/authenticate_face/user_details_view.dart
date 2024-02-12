@@ -1,6 +1,6 @@
-import 'package:face_auth/common/utils/extensions/size_extension.dart';
-import 'package:face_auth/constants/theme.dart';
-import 'package:face_auth/model/user_model.dart';
+import 'package:adams/common/utils/extensions/size_extension.dart';
+import 'package:adams/constants/theme.dart';
+import 'package:adams/model/user_model.dart';
 import 'package:flutter/material.dart';
 
 class UserDetailsView extends StatelessWidget {
@@ -48,7 +48,7 @@ class UserDetailsView extends StatelessWidget {
               ),
               SizedBox(height: 0.025.sh),
               Text(
-                "Hey ${user.name} !",
+                "Hey ${user.id} !",
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 26,

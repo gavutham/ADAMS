@@ -1,4 +1,4 @@
-import 'package:face_auth/constants/theme.dart';
+import 'package:adams/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackBar {

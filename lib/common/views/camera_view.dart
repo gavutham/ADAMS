@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:face_auth/common/utils/extensions/size_extension.dart';
-import 'package:face_auth/constants/theme.dart';
+import 'package:adams/common/utils/extensions/size_extension.dart';
+import 'package:adams/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';

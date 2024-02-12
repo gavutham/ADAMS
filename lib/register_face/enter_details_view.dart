@@ -1,19 +1,22 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:face_auth/common/utils/custom_snackbar.dart';
-import 'package:face_auth/common/utils/custom_text_field.dart';
-import 'package:face_auth/common/views/custom_button.dart';
-import 'package:face_auth/constants/theme.dart';
-import 'package:face_auth/model/user_model.dart';
+import 'package:adams/common/utils/custom_snackbar.dart';
+import 'package:adams/common/utils/custom_text_field.dart';
+import 'package:adams/common/views/custom_button.dart';
+import 'package:adams/constants/theme.dart';
+import 'package:adams/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import "package:firebase_auth/firebase_auth.dart";
 
 class EnterDetailsView extends StatefulWidget {
   final String image;
+  final dynamic user;
   final FaceFeatures faceFeatures;
   const EnterDetailsView({
     Key? key,
+    required this.user,
     required this.image,
     required this.faceFeatures,
   }) : super(key: key);
@@ -24,7 +27,7 @@ class EnterDetailsView extends StatefulWidget {
 
 class _EnterDetailsViewState extends State<EnterDetailsView> {
   bool isRegistering = false;
-  final _formFieldKey = GlobalKey<FormFieldState>();
+  // final _formFieldKey = GlobalKey<FormFieldState>();
   final TextEditingController _nameController = TextEditingController();
 
   @override
@@ -54,41 +57,24 @@ class _EnterDetailsViewState extends State<EnterDetailsView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomTextField(
-                  formFieldKey: _formFieldKey,
-                  controller: _nameController,
-                  hintText: "Name",
-                  validatorText: "Name cannot be empty",
-                ),
                 CustomButton(
                   text: "Register Now",
                   onTap: () {
-                    if (_formFieldKey.currentState!.validate()) {
-                      FocusScope.of(context).unfocus();
-
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) => const Center(
-                          child: CircularProgressIndicator(
-                            color: accentColor,
-                          ),
-                        ),
-                      );
-
-                      String userId = Uuid().v1();
-                      UserModel user = UserModel(
-                        id: userId,
-                        name: _nameController.text.trim().toUpperCase(),
+                    dynamic id = FirebaseFirestore.instance.collection("students").doc(widget.user.sid).id;
+                    if(id!=null) {
+                      UserModel userModel = UserModel(
+                        id: id,
                         image: widget.image,
-                        registeredOn: DateTime.now().millisecondsSinceEpoch,
+                        registeredOn: DateTime
+                            .now()
+                            .millisecondsSinceEpoch,
                         faceFeatures: widget.faceFeatures,
                       );
 
                       FirebaseFirestore.instance
-                          .collection("users")
-                          .doc(userId)
-                          .set(user.toJson())
+                          .collection("faces")
+                          .doc(widget.user.sid)
+                          .set(userModel.toJson())
                           .catchError((e) {
                         log("Registration Error: $e");
                         Navigator.of(context).pop();
@@ -100,11 +86,12 @@ class _EnterDetailsViewState extends State<EnterDetailsView> {
                         Future.delayed(const Duration(seconds: 1), () {
                           //Reaches HomePage
                           Navigator.of(context)
-                            ..pop()
-                            ..pop()
-                            ..pop();
+                            ..pop()..pop()..pop();
                         });
                       });
+                    }
+                    else{
+                      print("User Null");
                     }
                   },
                 ),

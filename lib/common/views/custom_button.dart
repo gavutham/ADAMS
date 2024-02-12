@@ -1,5 +1,5 @@
-import 'package:face_auth/common/utils/extensions/size_extension.dart';
-import 'package:face_auth/constants/theme.dart';
+import 'package:adams/common/utils/extensions/size_extension.dart';
+import 'package:adams/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
