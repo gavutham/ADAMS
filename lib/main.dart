@@ -4,10 +4,12 @@ import 'package:adams/services/auth.dart';
 import 'package:adams/services/database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterBluePlus.setLogLevel(LogLevel.verbose, color: true);
   await Firebase.initializeApp();
   runApp(const MyApp());
 }

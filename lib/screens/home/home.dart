@@ -1,3 +1,4 @@
+import "dart:async";
 import "package:adams/models/student.dart";
 import "package:adams/services/auth.dart";
 import "package:adams/services/database.dart";
@@ -5,12 +6,51 @@ import "package:adams/shared/loading.dart";
 import "package:adams/utils/datetime.dart";
 import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
+import "package:flutter/physics.dart";
+import "package:flutter_blue_plus/flutter_blue_plus.dart";
 import "package:provider/provider.dart";
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+  List<ScanResult> _scanResults = [];
+  late StreamSubscription<List<ScanResult>> _scanResultsSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
+      setState(() {
+        _scanResults = results.where((element) => element.rssi > -80).toList();
+      });
+      
+    }, onError: (e) {
+      print(e);
+    });
+  }
+
+  @override
+  void dispose() {
+    _scanResultsSubscription.cancel();
+    super.dispose();
+  }
+
+  Future scan() async {
+    FlutterBluePlus.turnOn();
+    try {
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
+    } catch (e) {
+      print(e);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,19 +97,31 @@ class Home extends StatelessWidget {
                 builder: (context, snapshot) {
                   final portalOpen = snapshot.data != null ? snapshot.data!.snapshot.value as bool: false;
                   return ElevatedButton(
-                    onPressed: portalOpen ? () async {
-                      String date = getFormattedDate();
-                      String interval = getCurrentInterval();
-                      if (interval != "") {
-                        dynamic result = await db.markAttendance(student, date, interval);
-                        print(result);
-                      } else {
-                        print("Not in the time interval");
-                      }
-                    } : null,
+                    // onPressed: portalOpen ? () async {
+                    //   String date = getFormattedDate();
+                    //   String interval = getCurrentInterval();
+                    //   if (interval != "") {
+                    //     dynamic result = await db.markAttendance(student, date, interval);
+                    //     print(result);
+                    //   } else {
+                    //     print("Not in the time interval");
+                    //   }
+                    // } : null,
+                    onPressed: scan,
                     child: const Text("Mark attendance"),
                   );
                 },
+              ),
+              Container(
+                height: 200,
+                child: ListView(
+                  children: _scanResults.map((e) {
+                    return ListTile(
+                      title: Text(e.device.advName.isNotEmpty ? e.device.advName : e.device.remoteId.id.toString(),),
+                      subtitle: Text(e.rssi.toString()),
+                    );
+                  }).toList(),
+                ),
               )
             ],
           ),
