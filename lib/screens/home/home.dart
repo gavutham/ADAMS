@@ -9,6 +9,7 @@ import "package:flutter/material.dart";
 import "package:flutter/physics.dart";
 import "package:flutter_blue_plus/flutter_blue_plus.dart";
 import "package:provider/provider.dart";
+import 'package:flutter_ble_peripheral/flutter_ble_peripheral.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   List<ScanResult> _scanResults = [];
+  bool isa = false;
   late StreamSubscription<List<ScanResult>> _scanResultsSubscription;
 
   @override
@@ -28,7 +30,7 @@ class _HomeState extends State<Home> {
 
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       setState(() {
-        _scanResults = results.where((element) => element.rssi > -80).toList();
+        _scanResults = results.where((element) => element.rssi > -380).toList();
       });
       
     }, onError: (e) {
@@ -49,6 +51,48 @@ class _HomeState extends State<Home> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void advertise() async {
+    final AdvertiseData advertiseData = AdvertiseData(
+      serviceUuid: 'bf27730d-860a-4d0a-89a1-2f91a6252bf7',
+      serviceDataUuid: "bf27730d-860a-4d0a-89a1-2f91a6252bf7",
+      includeDeviceName: true,
+      localName: "bf27730d-860a-4d0a-89a1-2f91a6252bf7",
+    );
+
+
+
+    final AdvertiseSetParameters advertiseSetParameters =
+    AdvertiseSetParameters();
+
+    final hasPermissions = await FlutterBlePeripheral().hasPermission();
+
+    if (hasPermissions == BluetoothPeripheralState.denied) return; // End
+
+    setState(() {
+      isa = true;
+    });
+
+    await FlutterBlePeripheral().start(
+      advertiseSettings: AdvertiseSettings(
+        txPowerLevel: AdvertiseTxPower.advertiseTxPowerHigh,
+      ),
+      advertiseData: advertiseData,
+      advertiseSetParameters: advertiseSetParameters,
+    );
+
+    print(FlutterBlePeripheral().isAdvertising);
+  }
+
+  Widget buildSub(ScanResult e) {
+    var text = "";
+    print(e.device.localName);
+    print(e.device.name);
+    print(e.device.toString());
+    e.advertisementData.serviceData.isNotEmpty ? text += e.advertisementData.serviceData[0].toString() : null;
+    e.advertisementData.serviceUuids.isNotEmpty ? text += e.advertisementData.serviceUuids[0].toString(): null;
+    return Text(text != "" ? text : "no uuids");
   }
 
 
@@ -118,11 +162,13 @@ class _HomeState extends State<Home> {
                   children: _scanResults.map((e) {
                     return ListTile(
                       title: Text(e.device.advName.isNotEmpty ? e.device.advName : e.device.remoteId.id.toString(),),
-                      subtitle: Text(e.rssi.toString()),
+                      subtitle: buildSub(e),
+                      trailing: Text(e.rssi.toString()),
                     );
                   }).toList(),
                 ),
-              )
+              ),
+              isa ? Text("Advertising") : Text("data"),
             ],
           ),
         ) ,
