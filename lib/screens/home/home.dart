@@ -91,6 +91,47 @@ class Home extends StatelessWidget {
                                   success: false);
                               return; // Exit if failed!
                             }
+                            var subscription =
+                                FlutterBluePlus.onScanResults.listen(
+                              (results) {
+                                if (results.isNotEmpty) {
+                                  ScanResult r = results
+                                      .last; // the most recently found device
+                                  print(
+                                      '${r.device.remoteId}: "${r.advertisementData.advName}" found! rssi: ${r.rssi} \n');
+                                  for (final guid
+                                      in r.advertisementData.serviceUuids) {
+                                    print('uuid: $guid');
+                                  }
+                                }
+                              },
+                              onError: (e) => print(e),
+                            );
+
+                            // cleanup: cancel subscription when scanning stops
+                            FlutterBluePlus.cancelWhenScanComplete(
+                                subscription);
+
+                            // Wait for Bluetooth enabled & permission granted
+                            // In your real app you should use `FlutterBluePlus.adapterState.listen` to handle all states
+                            await FlutterBluePlus.adapterState
+                                .where((val) => val == BluetoothAdapterState.on)
+                                .first;
+
+                            // Start scanning w/ timeout
+                            // Optional: you can use `stopScan()` as an alternative to using a timeout
+                            // Note: scan filters use an *or* behavior. i.e. if you set `withServices` & `withNames`
+                            //   we return all the advertisments that match any of the specified services *or* any
+                            //   of the specified names.
+                            await FlutterBluePlus.startScan(
+                              timeout: const Duration(seconds: 15),
+                            );
+
+                            // wait for scanning to stop
+                            await FlutterBluePlus.isScanning
+                                .where((val) => val == false)
+                                .first;
+
                             String date = getFormattedDate();
                             String interval = getCurrentInterval();
                             if (interval != "") {
