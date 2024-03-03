@@ -1,3 +1,4 @@
+import "dart:convert";
 import "dart:io";
 
 import "package:adams/models/student.dart";
@@ -9,6 +10,7 @@ import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
 import "package:flutter_blue_plus/flutter_blue_plus.dart";
 import "package:provider/provider.dart";
+import 'package:http/http.dart' as http;
 
 import 'package:adams/utils/snackbar.dart';
 
@@ -74,8 +76,18 @@ class Home extends StatelessWidget {
                       ? snapshot.data!.snapshot.value as bool
                       : false;
                   return ElevatedButton(
-                    onPressed: portalOpen
+                    onPressed: true
                         ? () async {
+                            var url =
+                                'http://192.168.29.95:5000/get-student-uuid/${student.year}/${student.department}/${student.section}/${student.email}';
+                            try {
+                              var response = await http.get(Uri.parse(url));
+                              print("We are here! After get student uuid.");
+                              // print(response.body);
+                            } catch (e) {
+                              print(e);
+                            }
+
                             try {
                               if (Platform.isAndroid) {
                                 await FlutterBluePlus.turnOn();
@@ -91,18 +103,35 @@ class Home extends StatelessWidget {
                                   success: false);
                               return; // Exit if failed!
                             }
+
+                            while (true) {
+                              await Future.delayed(Duration(seconds: 3));
+                              url =
+                                  'http://192.168.29.95:5000/pp-status-verify/${student.year}/${student.department}/${student.section}/${student.email}';
+                              try {
+                                var response = await http.get(Uri.parse(url));
+                                print(response.body);
+                                if (response.body == "true") break;
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
+
+                            List<Map> ppNearby = [];
+
                             var subscription =
                                 FlutterBluePlus.onScanResults.listen(
                               (results) {
                                 if (results.isNotEmpty) {
                                   ScanResult r = results
                                       .last; // the most recently found device
+                                  var map = Map();
+                                  map["uuid"] =
+                                      r.advertisementData.serviceUuids[0].str;
+                                  map["rssi"] = r.rssi;
+                                  ppNearby.add(map);
                                   print(
-                                      '${r.device.remoteId}: "${r.advertisementData.advName}" found! rssi: ${r.rssi} \n');
-                                  for (final guid
-                                      in r.advertisementData.serviceUuids) {
-                                    print('uuid: $guid');
-                                  }
+                                      'uuid discovered: ${r.advertisementData.serviceUuids[0]}');
                                 }
                               },
                               onError: (e) => print(e),
@@ -123,14 +152,29 @@ class Home extends StatelessWidget {
                             // Note: scan filters use an *or* behavior. i.e. if you set `withServices` & `withNames`
                             //   we return all the advertisments that match any of the specified services *or* any
                             //   of the specified names.
-                            await FlutterBluePlus.startScan(
-                              timeout: const Duration(seconds: 15),
-                            );
+                            try {
+                              await FlutterBluePlus.startScan(
+                                  timeout: const Duration(seconds: 15));
+                            } catch (e) {
+                              print('Start scan failed.\n');
+                            }
 
-                            // wait for scanning to stop
                             await FlutterBluePlus.isScanning
                                 .where((val) => val == false)
                                 .first;
+
+                            // wait for scanning to stop
+                            // await FlutterBluePlus.isScanning
+                            //     .where((val) => val == false)
+                            //     .first;
+
+                            print("We are here after scanning!");
+
+                            url =
+                                'http://192.168.29.95:5000/pp-verify/${student.year}/${student.department}/${student.section}';
+                            await http.post(Uri.parse(url),
+                                headers: {"Content-type": "application/json"},
+                                body: jsonEncode(ppNearby));
 
                             String date = getFormattedDate();
                             String interval = getCurrentInterval();
