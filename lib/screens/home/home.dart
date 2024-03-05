@@ -2,7 +2,9 @@ import "package:adams/models/student.dart";
 import "package:adams/services/auth.dart";
 import "package:adams/services/database.dart";
 import "package:adams/shared/loading.dart";
+import "package:adams/utils/bluetooth.dart";
 import "package:adams/utils/datetime.dart";
+import "package:adams/utils/server.dart";
 import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
@@ -18,6 +20,33 @@ class Home extends StatelessWidget {
 
     DatabaseReference portalStateRef = FirebaseDatabase.instance.ref("${student?.year}/${student?.department}/${student?.section}");
     final db = DatabaseService(sid: student?.sid);
+
+    handleSubmit() async {
+      if(student!= null) {
+        String date = getFormattedDate();
+        String interval = getCurrentInterval();
+        if (interval != "") {
+
+
+          var uuid = await getUuid(student); // getsUuid of the session (bf27730d-860a-4e09-889c-2d8b6a9e0fe7)
+          turnOn(); //turn on bluetooth
+
+          advertise(uuid);
+          verify(student);
+
+          //after verification
+          dynamic result = await db.markAttendance(student, date, interval);
+          print(result);
+
+          var nearbyDevices = getDevices();
+          await postNearbyDevices(nearbyDevices, student);
+
+        } else {
+          print("Not in the time interval");
+        }
+      }
+
+    }
 
     if (student != null) {
       final text = "Welcome ${student.name}";
@@ -57,16 +86,7 @@ class Home extends StatelessWidget {
                 builder: (context, snapshot) {
                   final portalOpen = snapshot.data != null ? snapshot.data!.snapshot.value as bool: false;
                   return ElevatedButton(
-                    onPressed: portalOpen ? () async {
-                      String date = getFormattedDate();
-                      String interval = getCurrentInterval();
-                      if (interval != "") {
-                        dynamic result = await db.markAttendance(student, date, interval);
-                        print(result);
-                      } else {
-                        print("Not in the time interval");
-                      }
-                    } : null,
+                    onPressed: portalOpen ? handleSubmit : null,
                     child: const Text("Mark attendance"),
                   );
                 },
