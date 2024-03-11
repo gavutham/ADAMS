@@ -9,6 +9,8 @@ import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
+import "../../authenticate_face/authenticate_face_view.dart";
+
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
 
@@ -34,14 +36,24 @@ class Home extends StatelessWidget {
           print(uuid);
           turnOn(); //turn on bluetooth
 
-          while (!response) {
+          while (response) {
             await advertise(uuid);
             response = await verify(student);
           }
 
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AuthenticateFaceView(student: student, date: date, interval: interval),
+            ),
+          );
+
+          // moving this part after the auth page
+
           //after verification
-          dynamic result = await db.markAttendance(student, date, interval);
-          print(result);
+          // dynamic result = await db.markAttendance();
+          // print(result);
+
+
 
           var nearbyDevices = await getDevices();
           await postNearbyDevices(nearbyDevices, student);

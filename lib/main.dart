@@ -6,10 +6,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'common/utils/custom_snackbar.dart';
+import 'common/utils/screen_size_util.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
+}
+
+void initializeUtilContexts(BuildContext context) {
+  ScreenSizeUtil.context = context;
+  CustomSnackBar.context = context;
 }
 
 class MyApp extends StatelessWidget {
@@ -18,6 +26,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    initializeUtilContexts(context);
     return StreamBuilder<StudentUser?>(
       stream: AuthService().user,
       builder: (context, snapshot) {

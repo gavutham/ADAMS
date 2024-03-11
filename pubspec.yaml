@@ -46,6 +46,11 @@ dependencies:
   http: ^1.1.0
   flutter_ble_peripheral: ^1.2.3
 
+  flutter_face_api: ^4.1.1
+  image_picker: ^0.8.6
+  uuid: ^3.0.7
+  google_mlkit_face_detection: ^0.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
