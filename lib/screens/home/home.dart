@@ -61,10 +61,10 @@ class Home extends StatelessWidget {
                 builder: (context, snapshot) {
                   final portalOpen = snapshot.data != null ? snapshot.data!.snapshot.value as bool: false;
                   return ElevatedButton(
-                    onPressed: !portalOpen ? () async {
+                    onPressed: portalOpen ? () async {
                       String date = getFormattedDate();
                       String interval = getCurrentInterval();
-                      if (interval != "") {
+                      if (interval == "") {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => const AuthenticateFaceView(),

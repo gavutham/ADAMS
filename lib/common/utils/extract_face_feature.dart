@@ -1,4 +1,4 @@
-import 'package:adams/model/user_model.dart';
+import 'package:adams/models/user_model.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 Future<FaceFeatures> extractFaceFeatures(

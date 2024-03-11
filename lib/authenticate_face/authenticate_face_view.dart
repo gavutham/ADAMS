@@ -12,7 +12,7 @@ import 'package:adams/common/utils/extract_face_feature.dart';
 import 'package:adams/common/views/camera_view.dart';
 import 'package:adams/common/views/custom_button.dart';
 import 'package:adams/constants/theme.dart';
-import 'package:adams/model/user_model.dart';
+import 'package:adams/models/user_model.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_face_api/face_api.dart' as regula;
 import 'package:flutter/material.dart';
@@ -52,15 +52,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     _audioPlayer.dispose();
     super.dispose();
   }
-
-  get _playScanningAudio => _audioPlayer
-    ..setReleaseMode(ReleaseMode.loop)
-    ..play(AssetSource("scan_beep.wav"));
-
-  get _playFailedAudio => _audioPlayer
-    ..stop()
-    ..setReleaseMode(ReleaseMode.release)
-    ..play(AssetSource("failed.mp3"));
 
   @override
   Widget build(BuildContext context) {
@@ -135,10 +126,9 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                           const Spacer(),
                           if (_canAuthenticate)
                             CustomButton(
-                              text: "Authenticate",
+                              text: "Mark Attendance",
                               onTap: () {
                                 setState(() => isMatching = true);
-                                _playScanningAudio;
                                 _fetchUsersAndMatchFace();
                               },
                             ),
@@ -211,7 +201,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     FirebaseFirestore.instance.collection("faces").get().catchError((e) {
       log("Getting User Error: $e");
       setState(() => isMatching = false);
-      _playFailedAudio;
       CustomSnackBar.errorSnackBar("Something went wrong. Please try again.");
     }).then((snap) {
       if (snap.docs.isNotEmpty) {
@@ -274,11 +263,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
         }
       });
       if (faceMatched) {
-        _audioPlayer
-          ..stop()
-          ..setReleaseMode(ReleaseMode.release)
-          ..play(AssetSource("success.mp3"));
-
         setState(() {
           trialNumber = 1;
           isMatching = false;
@@ -344,7 +328,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
                       } else {
                         Navigator.of(context).pop();
                         setState(() => isMatching = true);
-                        _playScanningAudio;
                         _fetchUserByName(_nameController.text.trim());
                       }
                     },
@@ -376,7 +359,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
         .catchError((e) {
       log("Getting User Error: $e");
       setState(() => isMatching = false);
-      _playFailedAudio;
       CustomSnackBar.errorSnackBar("Something went wrong. Please try again.");
     }).then((snap) {
       if (snap.docs.isNotEmpty) {
@@ -403,7 +385,6 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     required String title,
     required String description,
   }) {
-    _playFailedAudio;
     setState(() => isMatching = false);
     showDialog(
       context: context,

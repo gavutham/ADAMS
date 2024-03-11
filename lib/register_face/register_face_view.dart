@@ -5,7 +5,7 @@ import 'package:adams/common/views/camera_view.dart';
 import 'package:adams/common/views/custom_button.dart';
 import 'package:adams/common/utils/extensions/size_extension.dart';
 import 'package:adams/constants/theme.dart';
-import 'package:adams/model/user_model.dart';
+import 'package:adams/models/user_model.dart';
 import 'package:adams/register_face/enter_details_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';

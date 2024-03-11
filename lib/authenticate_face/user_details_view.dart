@@ -1,6 +1,6 @@
 import 'package:adams/common/utils/extensions/size_extension.dart';
 import 'package:adams/constants/theme.dart';
-import 'package:adams/model/user_model.dart';
+import 'package:adams/models/user_model.dart';
 import 'package:flutter/material.dart';
 
 class UserDetailsView extends StatelessWidget {

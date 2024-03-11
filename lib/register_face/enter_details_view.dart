@@ -5,7 +5,7 @@ import 'package:adams/common/utils/custom_snackbar.dart';
 import 'package:adams/common/utils/custom_text_field.dart';
 import 'package:adams/common/views/custom_button.dart';
 import 'package:adams/constants/theme.dart';
-import 'package:adams/model/user_model.dart';
+import 'package:adams/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import "package:firebase_auth/firebase_auth.dart";
@@ -85,8 +85,13 @@ class _EnterDetailsViewState extends State<EnterDetailsView> {
                         CustomSnackBar.successSnackBar("Registration Success!");
                         Future.delayed(const Duration(seconds: 1), () {
                           //Reaches HomePage
-                          Navigator.of(context)
-                            ..pop()..pop()..pop();
+                          if (context != null) {
+                            Navigator.of(context)
+                              ..pop()..pop()..pop();
+                          } else {
+                            print("Context is null.");
+                          }
+
                         });
                       });
                     }

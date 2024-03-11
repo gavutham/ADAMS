@@ -42,7 +42,7 @@ class CustomButton extends StatelessWidget {
                 radius: 0.03.sh,
                 backgroundColor: accentColor,
                 child: const Icon(
-                  Icons.arrow_circle_right,
+                  Icons.arrow_forward_outlined,
                   color: buttonColor,
                 ),
               )
