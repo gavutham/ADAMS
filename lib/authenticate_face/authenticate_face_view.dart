@@ -278,12 +278,12 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
           isMatching = false;
         });
 
-        if(true || loggingUser?.id != getCurrentUserUid()){
-
+        if(loggingUser!.id == getCurrentUserUid()){
           final db = DatabaseService(sid: widget.student.sid);
           dynamic result = await db.markAttendance(widget.student, widget.date, widget.interval);
-          print(result);
-          if (true || !mounted) {
+          log(result.toString(), name: "Mark Attendance Result");
+
+          if (mounted && result) {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => UserDetailsView(user: loggingUser!),
@@ -291,6 +291,13 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
             );
             break;
           }
+        }
+        else if(loggingUser == null){
+          _showFailureDialog(title: "User not found", description: "Register new user during signup");
+        }
+        else{
+          log(loggingUser!.id.toString(), name: "Logginguser");
+          _showFailureDialog(title: "Proxy detected", description: "User trying to mark proxy found");
         }
       }
     }

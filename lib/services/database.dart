@@ -1,3 +1,5 @@
+import "dart:developer";
+
 import "package:adams/models/student.dart";
 import "package:adams/utils/database.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -37,6 +39,10 @@ class DatabaseService {
 
   Future<bool> markAttendance(StudentData student,String date, String time) async {
     try{
+      time = "14:50-15:40";
+      // log(student.toString(), name:"Student");
+      // log(date.toString(), name:"Date");
+      // log(time.toString(), name:"Time");
       final attendanceRef = attendanceCollection
           .doc(student.department)
           .collection(student.section)

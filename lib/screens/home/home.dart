@@ -47,7 +47,7 @@ class Home extends StatelessWidget {
             ),
           );
 
-          // moving this part after the auth page
+          // moving the below part after the auth page
 
           //after verification
           // dynamic result = await db.markAttendance();
