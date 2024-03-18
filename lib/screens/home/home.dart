@@ -8,7 +8,6 @@ import "package:adams/utils/server.dart";
 import "package:firebase_database/firebase_database.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-
 import "../../authenticate_face/authenticate_face_view.dart";
 
 class Home extends StatelessWidget {
@@ -29,6 +28,7 @@ class Home extends StatelessWidget {
         var response = false;
         String date = getFormattedDate();
         String interval = getCurrentInterval();
+
         if (true || (interval != "")) {
           // if (true) {
           var uuid = await getUuid(
@@ -36,23 +36,17 @@ class Home extends StatelessWidget {
           print(uuid);
           turnOn(); //turn on bluetooth
 
-          while (response) {
+          while (!response) {
             await advertise(uuid);
             response = await verify(student);
           }
 
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AuthenticateFaceView(student: student, date: date, interval: interval),
-            ),
-          );
-
-          // moving the below part after the auth page
-
-          //after verification
-          // dynamic result = await db.markAttendance();
-          // print(result);
-
+          //need to fix the flow (face auth)
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => AuthenticateFaceView(student: student, date: date, interval: interval),
+          //   ),
+          // );
 
 
           var nearbyDevices = await getDevices();
