@@ -49,3 +49,26 @@ Future postNearbyDevices(List<Map> nearby, StudentData student) async {
   await http.post(Uri.parse(url),
       headers: {"Content-type": "application/json"}, body: jsonEncode(nearby));
 }
+
+List<Map> getStatistics(String email) {
+
+  //get this from a request to python server
+  List<Map> statistics = [
+    {
+      "subCode": "UME2247",
+      "name": "Engineering Thermodynamics",
+      "teacher": "Dr.A.S.Ramana",
+      "conducted": 25,
+      "attended": 23,
+    },
+    {
+      "subCode": "UME2290",
+      "name": "Mechanics of Solids",
+      "teacher": "Dr.M.Selvaraj",
+      "conducted": 24,
+      "attended": 20,
+    }
+  ];
+
+  return statistics;
+}
