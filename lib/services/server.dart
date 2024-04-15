@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 
 // const baseUrl = "http://192.168.29.95:5000";
 // const baseUrl = "http://10.17.214.179:5000";
-const baseUrl = "http://10.17.162.192:5000";
+// const baseUrl = "http://10.17.162.192:5000";
+const baseUrl = "http://144.91.106.164:8000";
 
 Future getUuid(StudentData student) async {
   const base = "$baseUrl/get-student-uuid";
@@ -51,7 +52,6 @@ Future postNearbyDevices(List<Map> nearby, StudentData student) async {
 }
 
 List<Map> getStatistics(String email) {
-
   //get this from a request to python server
   List<Map> statistics = [
     {
