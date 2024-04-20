@@ -75,19 +75,15 @@ class _EnterDetailsViewState extends State<EnterDetailsView> {
                           .catchError((e) {
                         log("Registration Error: $e");
                         Navigator.of(context).pop();
-                        CustomSnackBar.errorSnackBar(
+                        CustomSnackBar(context: context).errorSnackBar(
                             "Registration Failed! Try Again.");
                       }).whenComplete(() {
                         Navigator.of(context).pop();
-                        CustomSnackBar.successSnackBar("Registration Success!");
+                        CustomSnackBar(context: context).successSnackBar("Registration Success!");
                         Future.delayed(const Duration(seconds: 1), () {
                           //Reaches HomePage
-                          if (context != null) {
-                            Navigator.of(context)
-                              ..pop()..pop()..pop();
-                          } else {
-                            print("Context is null.");
-                          }
+                          Navigator.of(context)
+                            ..pop()..pop()..pop();
 
                         });
                       });

@@ -17,7 +17,7 @@ void main() async {
 
 void initializeUtilContexts(BuildContext context) {
   ScreenSizeUtil.context = context;
-  CustomSnackBar.context = context;
+  // CustomSnackBar.context = context;
 }
 
 class MyApp extends StatelessWidget {

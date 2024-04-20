@@ -10,10 +10,16 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "../../authenticate_face/authenticate_face_view.dart";
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +30,9 @@ class Home extends StatelessWidget {
     final db = DatabaseService(sid: student?.sid);
 
     handleSubmit() async {
+      setState(() {
+        isLoading = true;
+      });
       if (student != null) {
         var response = false;
 
@@ -47,6 +56,9 @@ class Home extends StatelessWidget {
         var nearbyDevices = await getDevices();
         await postNearbyDevices(nearbyDevices, student);
       }
+      setState(() {
+        isLoading = false;
+      });
     }
 
     if (student != null) {
@@ -121,8 +133,9 @@ class Home extends StatelessWidget {
                   return Column(
                     children: [
                       ElevatedButton(
-                        onPressed: portalOpen ? handleSubmit : null,
+                        onPressed: portalOpen && !isLoading ? handleSubmit : null,
                         child: const Text("Mark attendance"),
+
                       ),
                       const SizedBox(height: 10,),
                       Text(

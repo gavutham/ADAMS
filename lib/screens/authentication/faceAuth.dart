@@ -1,4 +1,5 @@
 
+import 'package:adams/shared/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:adams/services/auth.dart';
 import 'package:adams/register_face/register_face_view.dart';
@@ -19,7 +20,8 @@ class FaceAuth extends StatefulWidget{
 class _FaceAuth extends State<FaceAuth>{
   final _auth = AuthService();
 
-  late dynamic user;
+  bool isLoading = false;
+  dynamic user;
 
   @override
   void initState() {
@@ -28,6 +30,9 @@ class _FaceAuth extends State<FaceAuth>{
   }
 
   Future<User> _registerUser() async {
+    setState(() {
+      isLoading = true;
+    });
     user = await _auth.studentSignUp(
       widget.email,
       widget.password,
@@ -36,14 +41,19 @@ class _FaceAuth extends State<FaceAuth>{
       widget.name,
       widget.section,
     );
-    setState(() {}); // Update the UI after user registration
+    setState(() {
+      isLoading = false;
+    }); // Update the UI after user registration
     return user;
   }
 
   @override
   Widget build(BuildContext context) {
-    if(user == null){
-      return Text("Something went wrong! ");
+    if(isLoading) {
+      return const Loading();
+    }
+    else if(user == null){
+      return const Text("Something went wrong! ");
     }
     else{
       return RegisterFaceView(user: user);
