@@ -210,7 +210,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     FirebaseFirestore.instance.collection("faces").get().catchError((e) {
       log("Getting User Error: $e");
       setState(() => isMatching = false);
-      CustomSnackBar.errorSnackBar("Something went wrong. Please try again.");
+      CustomSnackBar(context: context).errorSnackBar("Something went wrong. Please try again.");
     }).then((snap) {
       if (snap.docs.isNotEmpty) {
         users.clear();
