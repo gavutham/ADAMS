@@ -46,6 +46,10 @@ class _HomeState extends State<Home> {
 
         while (!response) {
           await advertise(uuid);
+          if (!await is_session_started(student)) {
+            "Session not in progress. Exiting.";
+            return;
+          }
           response = await verify(student);
         }
 

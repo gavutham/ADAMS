@@ -76,8 +76,8 @@ List<Map> getStatistics(String email) {
 }
 
 Future<bool> is_session_started(StudentData student) async {
-  final base = "$baseUrl/is-session-started/";
-  final url = "$base/{student.year}/{student.department}{student.section}";
+  final base = "$baseUrl/is-session-started";
+  final url = "$base/${student.year}/${student.department}/${student.section}";
 
   try {
     var response = await http.get(Uri.parse(url));
