@@ -19,7 +19,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
-  String? ip;
 
   bool isLoading = false;
 
@@ -39,7 +38,7 @@ class _HomeState extends State<Home> {
       if (student != null) {
         var response = false;
 
-        var uuid = await getUuid(ip,
+        var uuid = await getUuid(
             student); // getsUuid of the session (bf27730d-860a-4e09-889c-2d8b6a9e0fe7)
         print(uuid);
         turnOn(); //turn on bluetooth
@@ -151,21 +150,6 @@ class _HomeState extends State<Home> {
                   print(portalOpen);
                   return Column(
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.70,
-                        child: TextField(
-                          onChanged: (value) => {
-                            setState(() {
-                              ip = value;
-                            })
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.all(10),
-                            hintText: 'Enter the IP',
-                          ),
-                        ),
-                      ),
                       ElevatedButton(
                         onPressed: portalOpen
                             ? isLoading

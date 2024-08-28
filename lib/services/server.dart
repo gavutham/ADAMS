@@ -6,11 +6,10 @@ import 'package:http/http.dart' as http;
 // const baseUrl = "http://10.17.214.179:5000";
 // const baseUrl = "http://10.17.162.192:5000";
 // const baseUrl = "http://144.91.106.164:8000";
-String? baseUrl = "";
+const baseUrl = "https://adams-server.vercel.app";
 
-Future getUuid(String? ip, StudentData student) async {
-  baseUrl = ip;
-  final base = "$baseUrl/get-student-uuid";
+Future getUuid(StudentData student) async {
+  const base = "$baseUrl/get-student-uuid";
   var url =
       '$base/${student.year}/${student.department}/${student.section}/${student.email}';
 
@@ -23,7 +22,7 @@ Future getUuid(String? ip, StudentData student) async {
 }
 
 Future<bool> verify(StudentData student) async {
-  final base = "$baseUrl/pp-status-verify";
+  const base = "$baseUrl/pp-status-verify";
 
   while (true) {
     await Future.delayed(const Duration(seconds: 3));
@@ -46,7 +45,7 @@ Future<bool> verify(StudentData student) async {
 }
 
 Future postNearbyDevices(List<Map> nearby, StudentData student) async {
-  var base = "$baseUrl/pp-verify";
+  const base = "$baseUrl/pp-verify";
   var url = '$base/${student.year}/${student.department}/${student.section}';
 
   await http.post(Uri.parse(url),
@@ -76,7 +75,7 @@ List<Map> getStatistics(String email) {
 }
 
 Future<bool> is_session_started(StudentData student) async {
-  final base = "$baseUrl/is-session-started";
+  const base = "$baseUrl/is-session-started";
   final url = "$base/${student.year}/${student.department}/${student.section}";
 
   try {
