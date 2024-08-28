@@ -19,6 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+  String? ip;
 
   bool isLoading = false;
 
@@ -31,7 +32,6 @@ class _HomeState extends State<Home> {
     final db = DatabaseService(sid: student?.sid);
 
     handleSubmit() async {
-
       setState(() {
         isLoading = true;
       });
@@ -39,7 +39,8 @@ class _HomeState extends State<Home> {
       if (student != null) {
         var response = false;
 
-        var uuid = await getUuid(student); // getsUuid of the session (bf27730d-860a-4e09-889c-2d8b6a9e0fe7)
+        var uuid = await getUuid(ip,
+            student); // getsUuid of the session (bf27730d-860a-4e09-889c-2d8b6a9e0fe7)
         print(uuid);
         turnOn(); //turn on bluetooth
 
@@ -55,7 +56,6 @@ class _HomeState extends State<Home> {
         //   ),
         // );
 
-
         var nearbyDevices = await getDevices();
         await postNearbyDevices(nearbyDevices, student);
 
@@ -69,7 +69,6 @@ class _HomeState extends State<Home> {
       setState(() {
         isLoading = false;
       });
-
     }
 
     if (student != null) {
@@ -113,7 +112,10 @@ class _HomeState extends State<Home> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Statistics()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Statistics()));
                     },
                     child: const Row(
                       children: [
@@ -133,7 +135,9 @@ class _HomeState extends State<Home> {
                   )
                 ],
               ),
-              const SizedBox(height: 50,),
+              const SizedBox(
+                height: 50,
+              ),
               StreamBuilder(
                 stream: portalStateRef.onValue,
                 builder: (context, snapshot) {
@@ -143,15 +147,37 @@ class _HomeState extends State<Home> {
                   print(portalOpen);
                   return Column(
                     children: [
-                      ElevatedButton(
-                        onPressed: portalOpen ? isLoading ? null : handleSubmit : null,
-                        child: const Text("Mark attendance"),
-
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.70,
+                        child: TextField(
+                          onChanged: (value) => {
+                            setState(() {
+                              ip = value;
+                            })
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.all(10),
+                            hintText: 'Enter the IP',
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 10,),
+                      ElevatedButton(
+                        onPressed: portalOpen
+                            ? isLoading
+                                ? null
+                                : handleSubmit
+                            : null,
+                        child: const Text("Mark attendance"),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Text(
                         //get current attendance session from mongo
-                        portalOpen ? "There is an active attendance session" : "No Active Attendance Session",
+                        portalOpen
+                            ? "There is an active attendance session"
+                            : "No Active Attendance Session",
                         style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 20,

@@ -5,10 +5,12 @@ import 'package:http/http.dart' as http;
 // const baseUrl = "http://192.168.29.95:5000";
 // const baseUrl = "http://10.17.214.179:5000";
 // const baseUrl = "http://10.17.162.192:5000";
-const baseUrl = "http://144.91.106.164:8000";
+// const baseUrl = "http://144.91.106.164:8000";
+String? baseUrl = "";
 
-Future getUuid(StudentData student) async {
-  const base = "$baseUrl/get-student-uuid";
+Future getUuid(String? ip, StudentData student) async {
+  baseUrl = ip;
+  final base = "$baseUrl/get-student-uuid";
   var url =
       '$base/${student.year}/${student.department}/${student.section}/${student.email}';
 
@@ -21,7 +23,7 @@ Future getUuid(StudentData student) async {
 }
 
 Future<bool> verify(StudentData student) async {
-  const base = "$baseUrl/pp-status-verify";
+  final base = "$baseUrl/pp-status-verify";
 
   while (true) {
     await Future.delayed(const Duration(seconds: 3));
@@ -71,4 +73,21 @@ List<Map> getStatistics(String email) {
   ];
 
   return statistics;
+}
+
+Future<bool> is_session_started(StudentData student) async {
+  final base = "$baseUrl/is-session-started/";
+  final url = "$base/{student.year}/{student.department}{student.section}";
+
+  try {
+    var response = await http.get(Uri.parse(url));
+    if (response.body == "true") {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    print("Unable to reach server.");
+    return false;
+  }
 }
