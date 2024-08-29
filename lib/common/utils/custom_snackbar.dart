@@ -2,18 +2,20 @@ import 'package:adams/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomSnackBar {
-  static late BuildContext context;
+  final BuildContext context;
 
-  static errorSnackBar(String message) =>
+  CustomSnackBar({required this.context}) {}
+
+  errorSnackBar(String message) =>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
-          backgroundColor: Theme.of(context).errorColor,
+          backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
       );
 
-  static successSnackBar(String message) =>
+  successSnackBar(String message) =>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),

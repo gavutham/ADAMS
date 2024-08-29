@@ -150,38 +150,38 @@ class _SignUpState extends State<SignUp> {
                   }).toList(),
                 ),
                 const SizedBox(height: 20,),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(builder: (context) => FaceAuth(email: email,
-                //           password: password,
-                //           department: department!,
-                //           year: year!,
-                //           name: name,
-                //           section: section!
-                //       )), // Replace AuthFacePage with the name of your authentication face page widget
-                //     );
-                //
-                //   },
-                //   child: const Text("Register Face"),
-                // ),
                 ElevatedButton(
-                  onPressed: () async {
-                    setState(() {
-                      loading = true;
-                      error = "";
-                    });
-                    dynamic user = await _auth.studentSignUp(email, password, department!, year!, name, section!);
-                    if (user == null) {
-                      setState(() {
-                        loading = false;
-                        error = "Something Went Wrong, please try again";
-                      });
-                    }
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FaceAuth(email: email,
+                          password: password,
+                          department: department!,
+                          year: year!,
+                          name: name,
+                          section: section!
+                      )), // Replace AuthFacePage with the name of your authentication face page widget
+                    );
+
                   },
-                  child: const Text("Sign Up"),
+                  child: const Text("Register Face"),
                 ),
+                // ElevatedButton(
+                //   onPressed: () async {
+                //     setState(() {
+                //       loading = true;
+                //       error = "";
+                //     });
+                //     dynamic user = await _auth.studentSignUp(email, password, department!, year!, name, section!);
+                //     if (user == null) {
+                //       setState(() {
+                //         loading = false;
+                //         error = "Something Went Wrong, please try again";
+                //       });
+                //     }
+                //   },
+                //   child: const Text("Sign Up"),
+                // ),
                 const SizedBox(height: 20,),
                 Text(
                     error,

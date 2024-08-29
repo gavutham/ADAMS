@@ -52,12 +52,12 @@ class _HomeState extends State<Home> {
           response = await verify(student);
         }
 
-        //need to fix the flow (face auth)
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => AuthenticateFaceView(student: student, date: date, interval: interval),
-        //   ),
-        // );
+        // need to fix the flow (face auth)
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AuthenticateFaceView(student: student),
+          ),
+        );
 
         var nearbyDevices = await getDevices();
         await postNearbyDevices(nearbyDevices, student);

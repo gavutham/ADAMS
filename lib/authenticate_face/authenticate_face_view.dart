@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' as math;
 
+import 'package:adams/services/server.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:adams/authenticate_face/scanning_animation/animated_view.dart';
 import 'package:adams/authenticate_face/user_details_view.dart';
@@ -25,11 +26,11 @@ import '../utils/datetime.dart';
 
 class AuthenticateFaceView extends StatefulWidget {
   final StudentData student;
-  final String date, interval;
+  // final String date, interval;
   const AuthenticateFaceView({Key? key,
     required this.student,
-    required this.date,
-    required this.interval
+    // required this.date,
+    // required this.interval
   }) : super(key: key);
 
   @override
@@ -210,7 +211,7 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
     FirebaseFirestore.instance.collection("faces").get().catchError((e) {
       log("Getting User Error: $e");
       setState(() => isMatching = false);
-      CustomSnackBar.errorSnackBar("Something went wrong. Please try again.");
+      CustomSnackBar(context: context).errorSnackBar("Something went wrong. Please try again.");
     }).then((snap) {
       if (snap.docs.isNotEmpty) {
         users.clear();
@@ -279,11 +280,13 @@ class _AuthenticateFaceViewState extends State<AuthenticateFaceView> {
         });
 
         if(loggingUser!.id == getCurrentUserUid()){
-          final db = DatabaseService(sid: widget.student.sid);
-          dynamic result = await db.markAttendance(widget.student, widget.date, widget.interval);
-          log(result.toString(), name: "Mark Attendance Result");
+          // final db = DatabaseService(sid: widget.student.sid);
+          // dynamic result = await db.markAttendance(widget.student, widget.date, widget.interval);
+          // log(result.toString(), name: "Mark Attendance Result");
 
-          if (mounted && result) {
+          await postFaceAuth(widget.student);
+
+          if (mounted) {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => UserDetailsView(user: loggingUser!),

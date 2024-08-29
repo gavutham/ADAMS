@@ -44,6 +44,12 @@ Future<bool> verify(StudentData student) async {
   }
 }
 
+Future postFaceAuth(StudentData student) async {
+  var url = "$baseUrl/set-face-auth/${student.year}/${student.department}/${student.section}/${student.email}";
+
+  await http.post(Uri.parse(url));
+}
+
 Future postNearbyDevices(List<Map> nearby, StudentData student) async {
   const base = "$baseUrl/pp-verify";
   var url = '$base/${student.year}/${student.department}/${student.section}';
